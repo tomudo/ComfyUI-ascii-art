@@ -17,18 +17,18 @@ class ImageToAscii:
         return {
             "required": {
                 "image": ("IMAGE", ),
+                 "output_width": ("INT", {"default": 64, "min": 8, "max": 640}),
+                 "ascii_set_8chars_up": ("STRING", {"default": "@%#*+=-:. "}),
+                 
             }
         }
     RETURN_TYPES = ("STRING",)
     FUNCTION = "gen_ascii"
 
     CATEGORY = "conditioning"
-    ASCII_CHARS = "@%#*+=-:. "
- 
 
 
-
-    def resize_image(self,image, new_width=100):
+    def resize_image(self,image, new_width):
         width, height = image.size
         aspect_ratio = height / float(width)
         new_height = int(aspect_ratio * new_width * 0.55)
@@ -38,16 +38,16 @@ class ImageToAscii:
     def grayscale_image(self,image):
         return image.convert("L")
 
-    def pixel_to_ascii(self,image):
+    def pixel_to_ascii(self,image,ascii_set):
         pixels = np.array(image)
         ascii_str = ""
         for row in pixels:
             for pixel in row:
-                ascii_str += self.ASCII_CHARS[pixel // 32]
+                ascii_str += ascii_set[pixel // 32]
             ascii_str += "\n"
         return ascii_str
 
-    def gen_ascii(self,image, new_width=64):
+    def gen_ascii(self,image, output_width,ascii_set_8chars_up):
         if isinstance(image, torch.Tensor):
             if image.dim() == 4:
                 image = image.squeeze(0)
@@ -59,10 +59,10 @@ class ImageToAscii:
         elif not isinstance(image, Image.Image):
             raise ValueError(f"Unsupported image type: Expected a torch.Tensor, PIL.Image, or NumPy array, but got {type(image)}")
         #image = T.ToPILImage()(image)
-        image = self.resize_image(image, new_width)
+        image = self.resize_image(image, output_width)
         image = self.grayscale_image(image)
 
-        ascii_art = self.pixel_to_ascii(image)
+        ascii_art = self.pixel_to_ascii(image,ascii_set_8chars_up)
         with open("ascii_image.txt", "w") as f:
             f.write(ascii_art)
 
