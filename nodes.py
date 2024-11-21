@@ -1,3 +1,10 @@
+"""
+@author: Tomudo
+@title: Image To Ascii
+@nickname: Image To Ascii
+@description: Convert Image to ascii art to use. May be use to decorate terminal apps like Neofetch
+"""
+
 from PIL import Image
 import numpy as np
 import torch
