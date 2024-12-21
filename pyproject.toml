@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-ascii-art"
+description = "This is a custom node to convert image to ascii art string."
+version = "1.0.0"
+license = {file = "LICENSE"}
+
+[project.urls]
+Repository = "https://github.com/tomudo/ComfyUI-ascii-art"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-ascii-art"
+Icon = ""
